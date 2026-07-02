@@ -20,6 +20,7 @@ export default function NewJobPage() {
   const [employmentType, setEmploymentType] = useState('full-time')
   const [experienceLevel, setExperienceLevel] = useState('mid')
   const [active, setActive] = useState(true)
+  const [department, setDepartment] = useState('')
 
   // Lists
   const [reqInput, setReqInput] = useState('')
@@ -75,7 +76,8 @@ export default function NewJobPage() {
       location: location || undefined,
       employment_type: employmentType,
       experience_level: experienceLevel,
-      active
+      active,
+      department: department || undefined
     })
 
     if (!result.success) {
@@ -127,6 +129,19 @@ export default function NewJobPage() {
               onChange={(e) => setSlug(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none font-mono"
               required
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Department</label>
+            <input
+              type="text"
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+              placeholder="e.g. Engineering, Design, Marketing"
             />
           </div>
         </div>

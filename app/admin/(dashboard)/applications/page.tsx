@@ -1,6 +1,6 @@
 import React from 'react'
 import { createClient } from '@/lib/supabase/server'
-import { Clock, FileUser } from 'lucide-react'
+import { Clock, FileUser, ExternalLink, Briefcase } from 'lucide-react'
 
 export default async function AdminApplicationsPage() {
   const supabase = await createClient()
@@ -9,6 +9,16 @@ export default async function AdminApplicationsPage() {
     .from('job_applications')
     .select('*')
     .order('created_at', { ascending: false })
+
+  // Fetch job postings to map position_id to job title
+  const { data: jobPostings } = await supabase
+    .from('job_postings')
+    .select('id, title')
+
+  const jobTitleMap: Record<string, string> = {}
+  jobPostings?.forEach((job) => {
+    jobTitleMap[String(job.id)] = job.title
+  })
 
   const statusColors: Record<string, string> = {
     new: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
@@ -49,7 +59,7 @@ export default async function AdminApplicationsPage() {
               <thead className="bg-slate-950/60 border-b border-slate-800">
                 <tr>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Applicant</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Role Applied</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Job Posting</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Experience</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Links</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Status</th>
@@ -64,10 +74,25 @@ export default async function AdminApplicationsPage() {
                       <p className="text-xs text-slate-500">{app.email}</p>
                       {app.phone && <p className="text-xs text-slate-600">{app.phone}</p>}
                     </td>
-                    <td className="px-6 py-4 text-slate-300 text-xs font-medium">{app.job_title}</td>
+                    <td className="px-6 py-4">
+                      {app.position_id && jobTitleMap[String(app.position_id)] ? (
+                        <span className="flex items-center gap-1.5 text-xs font-medium text-indigo-300">
+                          <Briefcase className="w-3.5 h-3.5 text-indigo-400" />
+                          {jobTitleMap[String(app.position_id)]}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-400 font-medium">{app.job_title || '—'}</span>
+                      )}
+                    </td>
                     <td className="px-6 py-4 text-slate-400 text-xs">{app.experience_years} years</td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
+                        {app.resume_url && (
+                          <a href={app.resume_url} target="_blank" rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 font-medium">
+                            <ExternalLink className="w-3 h-3" /> Resume
+                          </a>
+                        )}
                         {app.linkedin_url && (
                           <a href={app.linkedin_url} target="_blank" rel="noopener noreferrer"
                             className="text-xs text-indigo-400 hover:text-indigo-300">LinkedIn ↗</a>

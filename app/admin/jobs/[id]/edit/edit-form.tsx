@@ -24,6 +24,7 @@ export default function EditJobForm({ job }: EditJobFormProps) {
   const [employmentType, setEmploymentType] = useState(job.employment_type || 'full-time')
   const [experienceLevel, setExperienceLevel] = useState(job.experience_level || 'mid')
   const [active, setActive] = useState(job.active ?? true)
+  const [department, setDepartment] = useState(job.department || '')
 
   // Lists
   const [reqInput, setReqInput] = useState('')
@@ -83,7 +84,8 @@ export default function EditJobForm({ job }: EditJobFormProps) {
       location: location || undefined,
       employment_type: employmentType,
       experience_level: experienceLevel,
-      active
+      active,
+      department: department || undefined
     })
 
     if (!result.success) {
@@ -134,6 +136,19 @@ export default function EditJobForm({ job }: EditJobFormProps) {
               onChange={(e) => setSlug(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none font-mono"
               required
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Department</label>
+            <input
+              type="text"
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+              placeholder="e.g. Engineering, Design, Marketing"
             />
           </div>
         </div>

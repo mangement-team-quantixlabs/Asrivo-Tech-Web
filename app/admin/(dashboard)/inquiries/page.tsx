@@ -1,6 +1,7 @@
 import React from 'react'
 import { createClient } from '@/lib/supabase/server'
-import { Clock } from 'lucide-react'
+import { Clock, Eye } from 'lucide-react'
+import Link from 'next/link'
 
 export default async function AdminInquiriesPage() {
   const supabase = await createClient()
@@ -46,6 +47,7 @@ export default async function AdminInquiriesPage() {
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Budget</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/50">
@@ -81,6 +83,12 @@ export default async function AdminInquiriesPage() {
                         <Clock className="w-3.5 h-3.5" />
                         {new Date(inquiry.created_at).toLocaleDateString()}
                       </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Link href={`/admin/inquiries/${inquiry.id}`}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all" title="View Details">
+                        <Eye className="w-4 h-4" />
+                      </Link>
                     </td>
                   </tr>
                 ))}

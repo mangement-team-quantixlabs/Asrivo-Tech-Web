@@ -19,6 +19,7 @@ export default function NewServicePage() {
   const [icon, setIcon] = useState('Briefcase')
   const [displayOrder, setDisplayOrder] = useState('1')
   const [active, setActive] = useState(true)
+  const [pricing, setPricing] = useState('')
   
   // Lists
   const [featInput, setFeatInput] = useState('')
@@ -73,7 +74,8 @@ export default function NewServicePage() {
       features,
       technologies,
       display_order: parseInt(displayOrder) || 1,
-      active
+      active,
+      pricing: pricing || undefined
     })
 
     if (!result.success) {
@@ -171,6 +173,17 @@ export default function NewServicePage() {
             onChange={(e) => setFullDescription(e.target.value)}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none h-32"
             placeholder="Complete description of the offering..."
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Pricing / Estimate</label>
+          <input
+            type="text"
+            value={pricing}
+            onChange={(e) => setPricing(e.target.value)}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+            placeholder="e.g. Starting at $5,000 or Contact for quote"
           />
         </div>
 

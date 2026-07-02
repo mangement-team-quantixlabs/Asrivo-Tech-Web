@@ -1,7 +1,7 @@
 import React from 'react'
 import { getCurrentAdmin, getSettings, updateSetting } from '@/lib/supabase/admin-actions'
 import { redirect } from 'next/navigation'
-import { Settings, Save, AlertTriangle } from 'lucide-react'
+import { Settings, Save, AlertTriangle, Bell, Key } from 'lucide-react'
 
 export default async function AdminSettingsPage() {
   // Server-side gate: only high admins can reach this page
@@ -22,6 +22,12 @@ export default async function AdminSettingsPage() {
   ) ?? []
   const featureSettings = settings?.filter((s: any) =>
     ['newsletter_enabled', 'contact_form_enabled', 'service_inquiry_enabled'].includes(s.key)
+  ) ?? []
+  const notificationSettings = settings?.filter((s: any) =>
+    ['admin_notification_emails', 'slack_webhook_url'].includes(s.key)
+  ) ?? []
+  const apiKeySettings = settings?.filter((s: any) =>
+    ['external_api_key_google', 'external_api_key_supabase'].includes(s.key)
   ) ?? []
 
   const handleUpdate = async (formData: FormData) => {
@@ -71,6 +77,22 @@ export default async function AdminSettingsPage() {
         title="Feature Toggles"
         icon={<Settings className="w-4 h-4 text-indigo-400" />}
         settings={featureSettings}
+        handleUpdate={handleUpdate}
+      />
+
+      {/* Notification Preferences */}
+      <SettingsGroup
+        title="Notification Preferences"
+        icon={<Bell className="w-4 h-4 text-amber-400" />}
+        settings={notificationSettings}
+        handleUpdate={handleUpdate}
+      />
+
+      {/* API Keys */}
+      <SettingsGroup
+        title="API Keys & Integrations"
+        icon={<Key className="w-4 h-4 text-emerald-400" />}
+        settings={apiKeySettings}
         handleUpdate={handleUpdate}
       />
     </div>

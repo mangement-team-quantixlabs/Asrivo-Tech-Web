@@ -1,6 +1,7 @@
 import React from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { MailCheck, CheckCircle, XCircle } from 'lucide-react'
+import ExportCsvButton from './export-csv-button'
 
 export default async function AdminSubscribersPage() {
   const supabase = await createClient()
@@ -16,9 +17,12 @@ export default async function AdminSubscribersPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Newsletter Subscribers</h1>
-        <p className="text-slate-400 text-sm mt-1">Manage all email newsletter subscriptions.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Newsletter Subscribers</h1>
+          <p className="text-slate-400 text-sm mt-1">Manage all email newsletter subscriptions.</p>
+        </div>
+        <ExportCsvButton subscribers={subscribers || []} />
       </div>
 
       <div className="grid grid-cols-3 gap-4">

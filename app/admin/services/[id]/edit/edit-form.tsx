@@ -23,6 +23,7 @@ export default function EditServiceForm({ service }: EditServiceFormProps) {
   const [icon, setIcon] = useState(service.icon || 'Briefcase')
   const [displayOrder, setDisplayOrder] = useState(String(service.display_order || '1'))
   const [active, setActive] = useState(service.active ?? true)
+  const [pricing, setPricing] = useState(service.pricing || '')
   
   // Lists
   const [featInput, setFeatInput] = useState('')
@@ -77,7 +78,8 @@ export default function EditServiceForm({ service }: EditServiceFormProps) {
       features,
       technologies,
       display_order: parseInt(displayOrder) || 1,
-      active
+      active,
+      pricing: pricing || undefined
     })
 
     if (!result.success) {
@@ -171,6 +173,17 @@ export default function EditServiceForm({ service }: EditServiceFormProps) {
             value={fullDescription}
             onChange={(e) => setFullDescription(e.target.value)}
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none h-32"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Pricing / Estimate</label>
+          <input
+            type="text"
+            value={pricing}
+            onChange={(e) => setPricing(e.target.value)}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none"
+            placeholder="e.g. Starting at $5,000 or Contact for quote"
           />
         </div>
 
