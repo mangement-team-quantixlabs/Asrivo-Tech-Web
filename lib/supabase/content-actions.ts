@@ -731,3 +731,94 @@ export async function reorderTestimonials(idOrderList: { id: string | number; di
     return { success: false, error: error.message }
   }
 }
+
+// ==========================================
+// PUBLIC INBOUND ACTIONS
+// ==========================================
+
+export async function submitContactForm(data: {
+  email: string
+  name: string
+  message: string
+  company?: string
+  phone?: string
+  subject?: string
+}) {
+  try {
+    const supabase = await createClient()
+    const { data: newContact, error } = await supabase
+      .from('contacts')
+      .insert({
+        ...data,
+        status: 'unread',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) throw new Error(error.message)
+    revalidatePath('/admin/contacts')
+    return { success: true, data: newContact }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
+}
+
+export async function submitServiceInquiry(data: {
+  email: string
+  name: string
+  company: string
+  phone?: string
+  service_type: string
+  project_description?: string
+  timeline?: string
+  budget?: string
+}) {
+  try {
+    const supabase = await createClient()
+    const { data: newInquiry, error } = await supabase
+      .from('service_inquiries')
+      .insert({
+        ...data,
+        status: 'new',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) throw new Error(error.message)
+    revalidatePath('/admin/inquiries')
+    return { success: true, data: newInquiry }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
+}
+
+export async function subscribeToNewsletter(data: {
+  email: string
+  name?: string
+}) {
+  try {
+    const supabase = await createClient()
+    const { data: newSubscriber, error } = await supabase
+      .from('newsletter_subscribers')
+      .insert({
+        ...data,
+        subscribed: true,
+        verified: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) throw new Error(error.message)
+    revalidatePath('/admin/subscribers')
+    return { success: true, data: newSubscriber }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
+}
+
